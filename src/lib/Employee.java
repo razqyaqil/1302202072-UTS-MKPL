@@ -80,7 +80,11 @@ public class Employee {
 		}else {
 			monthWorkingInYear = 12;
 		}
-		
-		return TaxFunction.calculateTax(monthlySalary, otherMonthlyIncome, monthWorkingInYear, annualDeductible, isMarried, childIdNumbers.size());
+
+		if (monthWorkingInYear > 12) {
+			System.err.println("More than 12 month working per year");
+		}
+		int TotalSalary = (monthlySalary+otherMonthlyIncome)*monthWorkingInYear;
+		return TaxFunction.calculateTax(TotalSalary, annualDeductible, isMarried, childIdNumbers.size());
 	}
 }
