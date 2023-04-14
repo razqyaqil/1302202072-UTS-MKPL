@@ -86,9 +86,6 @@ public class Employee {
 			monthWorkingInYear = 12;
 		}
 
-		if (monthWorkingInYear > 12) {
-			System.err.println("More than 12 month working per year");
-		}
 		int TotalSalary = (monthlySalary+otherMonthlyIncome)*monthWorkingInYear;
 		return TaxFunction.calculateTax(TotalSalary, annualDeductible, isMarried, childIdNumbers.size());
 	}
