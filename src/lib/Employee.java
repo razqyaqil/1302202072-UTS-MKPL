@@ -9,7 +9,6 @@ public class Employee {
 
 	private String employeeId;
 	private String EmployeeName;
-
 	
 	private LocalDate dateJoined;
 	private int monthWorkingInYear;
@@ -33,7 +32,7 @@ public class Employee {
 		this.gender = gender;
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		this.dateJoined = LocalDate.parse(dateJoined, formatter);;
+		this.dateJoined = LocalDate.parse(dateJoined, formatter);
 
 		childNames = new LinkedList<String>();
 		childIdNumbers = new LinkedList<String>();
@@ -73,7 +72,7 @@ public class Employee {
 		childIdNumbers.add(childIdNumber);
 	}
 	
-	public int getAnnualIncomeTax() {	
+	public int getMonthWorkingInYear() {	
 		/*
 		*Menghitung berapa lama pegawai bekerja dalam setahun ini, 
 		*jika pegawai sudah bekerja dari tahun sebelumnya maka otomatis dianggap 12 bulan.
@@ -81,12 +80,40 @@ public class Employee {
 		LocalDate date = LocalDate.now();
 		
 		if (date.getYear() == dateJoined.getYear()) {
-			monthWorkingInYear = date.getMonthValue() - dateJoined.getMonthValue();
+			return date.getMonthValue() - dateJoined.getMonthValue();
 		}else {
-			monthWorkingInYear = 12;
+			return 12;
 		}
+	}
 
+	public int calculateTax() {	
+		/**
+		 * Menghitung jumlah pajak penghasilan pegawai yang harus dibayarkan setahun.
+		 * 
+		 * Pajak dihitung sebagai 5% dari penghasilan bersih tahunan 
+		 * total gaji selama bulan bekerja dikurangi penghasilan tidak kena pajak
+		 * 
+		 * penghasilan tidak kena pajaknya pegawai adalah Rp 54.000.000
+		 * jika pegawai menikah penghasilan tidak kena pajaknya ditambah sebesar Rp 4.500.000.
+		 * jika pegawai memiliki anak pajaknya ditambah sebesar Rp 1.500.000/anak.
+		 * maksimal penambahan anak adalah 3.
+		 * 
+		 */
 		int TotalSalary = (monthlySalary+otherMonthlyIncome)*monthWorkingInYear;
-		return TaxFunction.calculateTax(TotalSalary, annualDeductible, isMarried, childIdNumbers.size());
+		int numberOfChildren = childNames.size();
+		int deductible = annualDeductible;
+
+		int tax = (int) Math.round(0.05 * (TotalSalary - deductible - 54000000));
+
+		if (numberOfChildren > 3) {
+			numberOfChildren = 3;
+		}
+		
+		if (isMarried) {
+			tax = tax + 4500000 + (numberOfChildren * 1500000);
+		}
+		
+		return tax;
+			 
 	}
 }
